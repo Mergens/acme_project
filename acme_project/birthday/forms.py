@@ -1,25 +1,19 @@
 # birthday/forms.py
+from django.forms import ModelForm
 from django import forms
+# Импортируем класс модели Birthday.
+from .models import Birthday
 
 
-# birthday/forms.py
-class BirthdayForm(forms.Form):
-    first_name = forms.CharField(
-        label='Имя',
-        max_length=20
-    )
-    last_name = forms.CharField(
-        label='Фамилия',
-        required=False,
-        help_text='Необязательное поле'
-    )
-    birthday = forms.DateField(
-        label='Дата рождения',
-        # Указываем, что виджет для ввода даты должен быть с типом date.
-        widget=forms.DateInput(attrs={'type': 'date'})        
-    )
-
-    description = forms.CharField(
-        required=False,
-        widget=forms.Textarea(attrs={'cols': 100, 'rows': 10}),
-        label='Описание: ')
+# Для использования формы с моделями меняем класс на forms.ModelForm.
+class BirthdayForm(ModelForm):
+    # Все настройки задаём в подклассе Meta.
+    class Meta:
+        # Указываем модель, на основе которой должна строиться форма.
+        model = Birthday
+        # Указываем, что надо отобразить все поля.
+        fields = '__all__'
+        widgets = {
+            'birthday': forms.DateInput(attrs={'type': 'date'}),
+            'description': forms.Textarea(attrs={'cols': 100, 'rows': 10}),
+        }
